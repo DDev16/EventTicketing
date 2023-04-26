@@ -20,8 +20,11 @@ const TicketPurchase = () => {
         setSuccess("");
         try {
             const accounts = await web3.eth.getAccounts();
-            await contract.methods.buyTicket(eventId).send({ from: accounts[0], value: 1000000000000000000 });
-            setSuccess("Ticket purchased successfully!");
+            const event = await contract.methods.getEventDetails(eventId).call();
+            const ticketPrice = event.ticketPrice;
+            await contract.methods.buyTicket(eventId).send({ from: accounts[0], value: ticketPrice });
+            
+                        setSuccess("Ticket purchased successfully!");
         } catch (err) {
             setError(err.message);
         }
