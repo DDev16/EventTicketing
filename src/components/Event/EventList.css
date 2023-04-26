@@ -1,0 +1,131 @@
+.event-table {
+    margin: 50px auto;
+    width: 100%;
+    font-family: 'Helvetica Neue', sans-serif;
+    overflow-x: auto;
+    border-collapse: collapse;
+    border-spacing: 0;
+    box-shadow: 0px 0px 20px 0px #ddd;
+    border-radius: 20px;
+    animation: slide-in-left 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+    }
+    
+    @keyframes slide-in-left {
+    0% {
+    transform: translateX(-100%);
+    opacity: 0;
+    }
+    100% {
+    transform: translateX(0);
+    opacity: 1;
+    }
+    }
+    
+    .event-table thead th {
+    background-color: #0066cc;
+    color: #ffffff;
+    text-align: center;
+    padding: 10px;
+    font-weight: bold;
+    border-radius: 20px 20px 0 0;
+    animation: slide-in-top 0.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+    }
+    
+    @keyframes slide-in-top {
+    0% {
+    transform: translateY(-100%);
+    opacity: 0;
+    }
+    100% {
+    transform: translateY(0);
+    opacity: 1;
+    }
+    }
+    
+    .event-table tbody td {
+    text-align: center;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    animation: fade-in 0.5s ease-in-out both;
+    }
+    
+    @keyframes fade-in {
+    0% {
+    opacity: 0;
+    }
+    100% {
+    opacity: 1;
+    }
+    }
+    
+    .event-table tbody tr:nth-child(odd) {
+    background-color: #f2f2f2;
+    }
+    
+    .event-table tbody tr:hover {
+    background-color: #ddd;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    }
+    
+   
+    @media (max-width: 768px) {
+        .event-table {
+            font-size: 0.9em;
+            margin: 20px auto;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px 0px #ddd;
+        }
+    
+        .event-table thead {
+            display: none;
+        }
+    
+        .event-table tbody td {
+            display: block;
+            font-size: 0.9em;
+            border: none;
+            padding: 10px 20px;
+            text-align: left;
+        }
+    
+        .event-table tbody td::before {
+            content: attr(data-label);
+            display: block;
+            text-align: left;
+            font-weight: bold;
+            padding-bottom: 10px;
+            color: #0066cc;
+        }
+    
+        .event-table tbody tr:nth-child(odd) {
+            background-color: #f9f9f9;
+        }
+    
+        .event-table tbody tr:hover {
+            background-color: #ddd;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+        }
+    }
+    
+
+    .event-table thead {
+        display: none;
+    }
+    
+    .event-table tbody td {
+        display: block;
+        font-size: 0.8em;
+        border: none;
+    }
+    
+    .event-table tbody td::before {
+        content: attr(data-label);
+        display: block;
+        text-align: left;
+        font-weight: bold;
+        padding-bottom: 10px;
+        color: #0066cc;
+    }
+    
