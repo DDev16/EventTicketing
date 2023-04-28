@@ -70,7 +70,7 @@ const TicketPurchase = () => {
 
   return (
     <div className="ticket-purchase">
-      <h2>Purchase Ticket</h2>
+      <h2>Buy Ticket</h2>
       {error && (
         <Alert variant="danger">{error}</Alert>
 )}

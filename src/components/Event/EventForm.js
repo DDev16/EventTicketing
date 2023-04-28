@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Form, FormGroup, FormControl, FormLabel } from 'react-bootstrap';
+import { Button, Form, FormGroup, FormControl, FormLabel, Spinner } from 'react-bootstrap';
 import './EventForm.css';
 import { web3, contract } from './web3';
 import { NFTStorage, File } from 'nft.storage';
 
 const apiKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDdGOTA4QjNBRDJGMDFGNjE2MjU1MTA0ODIwNjFmNTY5Mzc2QTg3MjYiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY3OTI5MDE5ODQyMCwibmFtZSI6Ik5FV0VTVCJ9.FGtIrIhKhgSx-10iVlI4sM_78o7jSghZsG5BpqZ4xfA'; // Replace with your API key from NFT.storage
 const client = new NFTStorage({ token: apiKey });
+
 const getMimeType = (file) => {
   const mimeType = file.type;
   return mimeType;
@@ -14,6 +15,7 @@ const getMimeType = (file) => {
 const EventForm = () => {
   const [loading, setLoading] = useState(false);
   const [fileUrl, setFileUrl] = useState(null);
+  const [previewImage, setPreviewImage] = useState(null);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -37,70 +39,84 @@ const EventForm = () => {
     const value = target.type === 'file' ? target.files[0] : target.value;
     const name = target.name;
 
+    if (name === 'image') {
+      const reader = new FileReader();
+      reader.readAsDataURL(value);
+      reader.onload = (e) => {
+        setPreviewImage(e.target.result);
+      };
+    }
+
     setFormData({ ...formData, [name]: value });
   };
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  setLoading(true);
+    e.preventDefault();
+    setLoading(true);
 
-  try {
-    const accounts = await web3.eth.getAccounts();
-    console.log('Accounts:', accounts);
+    try {
+      const accounts = await web3.eth.getAccounts();
+      console.log('Accounts:', accounts);
 
-    if (!formData.image) return;
-    setFileUrl(formData.image);
+      if (!formData.image) {
+        setLoading(false);
+        alert('Please upload an image for the event.');
+        return;
+      }
+      setFileUrl(formData.image);
 
-    const mimeType = getMimeType(formData.image);
-    console.log('Uploading image to NFT.storage...');
-    const metadata = await client.store({
-      name: formData.name,
-      description: formData.description,
-      image: new File([formData.image], formData.image.name, {
-        type: mimeType, // Set the correct MIME type
-      }),
-    });
-    console.log('Image uploaded, metadata:', metadata);
+      const mimeType = getMimeType(formData.image);
+      console.log('Uploading image to NFT.storage...');
+      const metadata = await client.store({
+        name: formData.name,
+        description: formData.description,
+        image: new File([formData.image], formData.image.name, {
+          type: mimeType, // Set the correct MIME type
+        }),
+      });
+      console.log('Image uploaded, metadata:', metadata);
 
-    console.log('Creating event on the contract...');
-    const createEventResponse = await contract.methods
-      .createEvent(
-        formData.name,
-        formData.date,
-        formData.time,
-        formData.venue,
-        formData.description,
-        formData.performers,
-        formData.organizer,
-        web3.utils.toWei(formData.ticketPrice, 'ether'),
-        formData.maxTicketsPerEvent,
-        metadata.url // Pass the metadata URL as a parameter
-      )
-      .send({ from: accounts[0] });
-    console.log('Event created:', createEventResponse);
+      console.log('Creating event on the contract...');
+      const createEventResponse = await contract.methods
+        .createEvent(
+          formData.name,
+          formData.date,
+          formData.time,
+          formData.venue,
+          formData.description,
+          formData.performers,
+          formData.organizer,
+          web3.utils.toWei(formData.ticketPrice, 'ether'),
+          formData.maxTicketsPerEvent,
+          metadata.url // Pass the metadata URL as a parameter
+        )
+        .send({ from: accounts[0] });
+      console.log('Event created:', createEventResponse);
 
-    setFormData({
-      name: '',
-      date: '',
-      time: '',
-      venue: '',
-      description: '',
-      performers: '',
-      organizer: '',
-      ticketPrice: '',
-      maxTicketsPerEvent: '',
-      image: null,
-    });
-  } catch (error) {
-    console.error('Error creating event:', error);
-  } finally {
-    setLoading(false);
-  }
-};
+      setFormData({
+        name: '',
+        date: '',
+        time: '',
+        venue: '',
+        description: '',
+        performers: '',
+        organizer: '',
+        ticketPrice: '',
+        maxTicketsPerEvent: '',
+        image: null,
+      });
+    } catch (error) {
+      console.error('Error creating event:', error);
+      alert('An error occurred while creating the event. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
 
   return (
     <div className="EventForm">
+    
       <Form onSubmit={handleSubmit}>
         <FormGroup>
           <FormLabel>Event Name</FormLabel>
@@ -185,6 +201,7 @@ const EventForm = () => {
           />
         </FormGroup>
         <FormGroup>
+          
           <FormLabel>Event Image</FormLabel>
           <FormControl
             type="file"
@@ -193,11 +210,32 @@ const EventForm = () => {
             onChange={handleChange}
           />
         </FormGroup>
-        <Button type="submit">Create Event</Button>
-        {loading && <p>Uploading image to NFT.storage, please wait...</p>}
-      </Form>
-    </div>
-  );
+      
+        <div className="Button">
+<Button type="submit" disabled={loading}>
+Create Event
+</Button>
+</div>
+{loading && (
+<div className="text-center">
+<Spinner animation="border" role="status">
+<span className="visually-hidden">Uploading image to NFT.storage, please wait...</span>
+</Spinner>
+<p>Uploading image to NFT.storage, please wait...</p>
+</div>
+)}
+</Form>
+{previewImage && (
+<img
+src={previewImage}
+alt="Preview"
+style={{ maxWidth: '400px', height: '400px', marginTop: '10px' }}
+/>
+)}
+</div>
+
+
+);
 };
 
 export default EventForm;

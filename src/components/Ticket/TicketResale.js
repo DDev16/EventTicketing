@@ -102,24 +102,7 @@ const ResaleForm = () => {
           </Button>
         </Form>
 
-        <Form onSubmit={handleBuyResaleTicket}>
-          <Form.Group className="form-group" controlId="formBuyResaleTicketId">
-            <Form.Label className="form-label">Ticket ID</Form.Label>
-            <Form.Control
-              className="form-control"
-              type="number"
-              min="0"
-              name="ticketId"
-              value={ticketId}
-              onChange={handleChange}
-              placeholder="Enter ticket ID"
-              required
-            />
-          </Form.Group>
-          <Button className="button" type="submit" disabled={loading}>
-            {loading ? 'Purchasing...' : 'Buy Resale Ticket'}
-          </Button>
-        </Form>
+       
       </div>
 
     </>
