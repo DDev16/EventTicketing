@@ -155,6 +155,11 @@
 				"internalType": "uint256",
 				"name": "_maxTicketsPerEvent",
 				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "_imageCID",
+				"type": "string"
 			}
 		],
 		"name": "createEvent",
@@ -464,6 +469,11 @@
 				"internalType": "uint256",
 				"name": "_newPrice",
 				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "_imageCID",
+				"type": "string"
 			}
 		],
 		"name": "updateEventDetails",
@@ -551,6 +561,11 @@
 				"internalType": "uint256",
 				"name": "maxTicketsPerEvent",
 				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "imageCID",
+				"type": "string"
 			}
 		],
 		"stateMutability": "view",
@@ -631,6 +646,11 @@
 						"internalType": "uint256",
 						"name": "maxTicketsPerEvent",
 						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "imageCID",
+						"type": "string"
 					}
 				],
 				"internalType": "struct EventTicketing.Event",

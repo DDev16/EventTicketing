@@ -1,87 +1,127 @@
 import React, { useState } from 'react';
-import { Button, Form } from 'react-bootstrap';
+import { Button, Form, Alert } from 'react-bootstrap';
 import { web3, contract } from '../web3';
-import ResaleTicketsList from '../Ticket/ResaleTicketsList.js'; // Import the new component
-
+import ResaleTicketsList from '../Ticket/ResaleTicketsList';
+import "./TicketResale.css"
 
 const ResaleForm = () => {
   const [ticketId, setTicketId] = useState('');
   const [resalePrice, setResalePrice] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState(null);
+  const [error, setError] = useState(null);
 
   const handleChange = (e) => {
-    e.target.name === 'ticketId'
-      ? setTicketId(e.target.value)
-      : setResalePrice(e.target.value);
+    const { name, value } = e.target;
+    name === 'ticketId' ? setTicketId(value) : setResalePrice(value);
   };
 
   const handleListTicket = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setError(null);
+    setMessage(null);
 
-    const accounts = await web3.eth.getAccounts();
+    try {
+      const accounts = await web3.eth.getAccounts();
 
-    await contract.methods
-      .listTicketForResale(ticketId, web3.utils.toWei(resalePrice, 'ether'))
-      .send({ from: accounts[0] });
+      await contract.methods
+        .listTicketForResale(ticketId, web3.utils.toWei(resalePrice, 'ether'))
+        .send({ from: accounts[0] });
 
-    setTicketId('');
-    setResalePrice('');
+      setMessage('Ticket successfully listed for resale.');
+      setTicketId('');
+      setResalePrice('');
+    } catch (err) {
+      setError('Error listing ticket for resale: ' + err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleBuyResaleTicket = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setError(null);
+    setMessage(null);
 
-    const ticket = await contract.methods.getTicketDetails(ticketId).call();
-    const accounts = await web3.eth.getAccounts();
+    try {
+      const ticket = await contract.methods.getTicketDetails(ticketId).call();
+      const accounts = await web3.eth.getAccounts();
 
-    await contract.methods
-      .buyResaleTicket(ticketId)
-      .send({ from: accounts[0], value: ticket.price });
+      await contract.methods
+        .buyResaleTicket(ticketId)
+        .send({ from: accounts[0], value: ticket.price });
 
-    setTicketId('');
+      setMessage('Resale ticket successfully purchased.');
+      setTicketId('');
+    } catch (err) {
+      setError('Error buying resale ticket: ' + err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <>
-      <Form onSubmit={handleListTicket}>
-        <Form.Group controlId="formTicketId">
-          <Form.Label>Ticket ID</Form.Label>
-          <Form.Control
-            type="text"
-            name="ticketId"
-            value={ticketId}
-            onChange={handleChange}
-            placeholder="Enter ticket ID"
-            required
-          />
-        </Form.Group>
-        <Form.Group controlId="formResalePrice">
-          <Form.Label>Resale Price</Form.Label>
-          <Form.Control
-            type="text"
-            name="resalePrice"
-            value={resalePrice}
-            onChange={handleChange}
-            placeholder="Enter resale price in Ether"
-            required
-          />
-        </Form.Group>
-        <Button type="submit">List Ticket for Resale</Button>
-      </Form>
-      <Form onSubmit={handleBuyResaleTicket}>
-        <Form.Group controlId="formBuyResaleTicketId">
-          <Form.Label>Ticket ID</Form.Label>
-          <Form.Control
-            type="text"
-            name="ticketId"
-            value={ticketId}
-            onChange={handleChange}
-            placeholder="Enter ticket ID"
-            required
-          />
-        </Form.Group>
-        <Button type="submit">Buy Resale Ticket</Button>
-      </Form>
-      <ResaleTicketsList />
+      {message && <Alert className="alert-success">{message}</Alert>}
+      {error && <Alert className="alert-danger">{error}</Alert>}
+
+      <div className="resale-container">
+        <h1 className="h1">Resale Tickets</h1>
+        <Form onSubmit={handleListTicket}>
+          <Form.Group className="form-group" controlId="formTicketId">
+            <Form.Label className="form-label">Ticket ID</Form.Label>
+            <Form.Control
+              className="form-control"
+              type="number"
+              min="0"
+              name="ticketId"
+              value={ticketId}
+              onChange={handleChange}
+              placeholder="Enter ticket ID"
+              required
+            />
+          </Form.Group>
+          <Form.Group className="form-group" controlId="formResalePrice">
+            <Form.Label className="form-label">Resale Price</Form.Label>
+            <Form.Control
+              className="form-control"
+              type="number"
+              min="0"
+              step="0.01"
+              name="resalePrice"
+              value={resalePrice}
+              onChange={handleChange}
+              placeholder="Enter resale price in Ether"
+              required
+            />
+          </Form.Group>
+          <Button className="button" type="submit" disabled={loading}>
+            {loading ? 'Listing...' : 'List Ticket for Resale'}
+          </Button>
+        </Form>
+
+        <Form onSubmit={handleBuyResaleTicket}>
+          <Form.Group className="form-group" controlId="formBuyResaleTicketId">
+            <Form.Label className="form-label">Ticket ID</Form.Label>
+            <Form.Control
+              className="form-control"
+              type="number"
+              min="0"
+              name="ticketId"
+              value={ticketId}
+              onChange={handleChange}
+              placeholder="Enter ticket ID"
+              required
+            />
+          </Form.Group>
+          <Button className="button" type="submit" disabled={loading}>
+            {loading ? 'Purchasing...' : 'Buy Resale Ticket'}
+          </Button>
+        </Form>
+      </div>
+
     </>
   );
 };

@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Table } from 'react-bootstrap';
 import { web3, contract } from '../web3';
+import '../Ticket/ResaleTicketsList.css'
+
+
 
 
 const ResaleTicketsList = () => {
@@ -29,6 +32,7 @@ const ResaleTicketsList = () => {
   return (
     <>
       <h2>Resale Tickets</h2>
+      <div className="table-responsive">
       <Table striped bordered hover>
         <thead>
           <tr>
@@ -48,6 +52,7 @@ const ResaleTicketsList = () => {
         </tbody>
         
       </Table>
+      </div>
       
     </>
   );

@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Table } from 'react-bootstrap';
 import { web3, contract } from './web3';
+import image1 from '../Ticket/ef.jpg';
+import image2 from '../Ticket/ll.jpg';
 import './EventList.css';
-
 
 const EventList = () => {
   const [events, setEvents] = useState([]);
@@ -13,7 +14,15 @@ const EventList = () => {
 
     for (let i = 1; i <= numberOfEvents; i++) {
       const event = await contract.methods.getEventDetails(i).call();
-      eventsData.push({ ...event, id: i });
+      let imageUrl;
+
+      if (i % 2 === 0) {
+        imageUrl = image1;
+      } else {
+        imageUrl = image2;
+      }
+
+      eventsData.push({ ...event, id: i, imageUrl });
     }
 
     setEvents(eventsData);
@@ -27,6 +36,7 @@ const EventList = () => {
     <Table striped bordered hover className="event-table">
       <thead>
         <tr>
+          <th>Image</th>
           <th>Name</th>
           <th>Date</th>
           <th>Time</th>
@@ -41,6 +51,7 @@ const EventList = () => {
       <tbody>
         {events.map((event) => (
           <tr key={event.id}>
+            <td><img src={event.imageUrl} alt={event.name} /></td>
             <td>{event.name}</td>
             <td>{event.date}</td>
             <td>{event.time}</td>
