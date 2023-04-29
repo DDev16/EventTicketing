@@ -16,6 +16,7 @@ const EventForm = () => {
   const [loading, setLoading] = useState(false);
   const [fileUrl, setFileUrl] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
+  const [updateId, setUpdateId] = useState('');
 
   const [formData, setFormData] = useState({
     name: '',
@@ -108,6 +109,39 @@ const EventForm = () => {
     } catch (error) {
       console.error('Error creating event:', error);
       alert('An error occurred while creating the event. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const accounts = await web3.eth.getAccounts();
+
+      const updateEventResponse = await contract.methods
+        .updateEventDetails(
+          updateId,
+          formData.name,
+          formData.date,
+          formData.time,
+          formData.venue,
+          formData.description,
+          formData.performers,
+          formData.organizer,
+          web3.utils.toWei(formData.ticketPrice, 'ether'),
+          fileUrl // Pass the image CID as a parameter
+        )
+        .send({ from: accounts[0] });
+      console.log('Event updated:', updateEventResponse);
+
+      setUpdateId('');
+    } catch (error) {
+      console.error('Error updating event:', error);
+      alert('An error occurred while updating the event. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -215,6 +249,20 @@ const EventForm = () => {
 <Button type="submit" disabled={loading}>
 Create Event
 </Button>
+<FormGroup>
+  <FormLabel>Event ID to Update</FormLabel>
+  <FormControl
+    type="number"
+    name="updateId"
+    value={updateId}
+    onChange={(e) => setUpdateId(e.target.value)}
+  />
+</FormGroup>
+
+<Button type="button" onClick={handleUpdate} disabled={loading}>
+  Update Event
+</Button>
+
 </div>
 {loading && (
 <div className="text-center">

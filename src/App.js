@@ -1,44 +1,63 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import EventForm from './components/Event/EventForm.js';
-import EventList from './components/Event/EventList.js';
-import TicketPurchaseForm from './components/Ticket/TicketPurchase.js';
-import ResaleForm from './components/Ticket/TicketResale.js';
-import TicketList from './components/Ticket/TicketList.js';
+import EventList from './components/Event/EventList';
+import TicketPurchaseForm from './components/Ticket/TicketPurchase';
+import ResaleForm from './components/Ticket/TicketResale';
+import TicketList from './components/Ticket/TicketList';
 import './App.css';
 import logo from './logo.png';
+import Portal from './components/Portal/Portal';
+import { Container, Typography, Box, Divider } from '@mui/material';
 
-function App() {
+const App = () => {
   return (
-    <div className="container app-container">
-      <div className="logo-container">
-        <img src={logo} className="App-logo" alt="logo" />
-      </div>
-      <h2 className="section-title">The Ultimate</h2>
-      <h1 className="page-title">Web3 Event Ticketing System</h1>
-      <p>
-        Welcome to our state-of-the-art Event Ticketing System! This platform is powered by blockchain technology, ensuring a secure and seamless experience for both event organizers and attendees.
-      </p>
-      <p>
-        To take part in our innovative Event Ticketing System, follow these steps: Create a Wallet, Browse Events, Purchase Tickets, and Resell Tickets (Optional).
-      </p>
-      <p>
-        Our Event Ticketing System offers a secure, transparent, and user-friendly solution for event organizers and attendees alike. Say goodbye to fraudulent tickets and scams, and embrace the future of event ticketing with our cutting-edge platform!
-      </p>
-      <EventForm />
-      <hr />
-      <h2 className="section-title">Events</h2>
+    <Container maxWidth="md">
+      <Box display="flex" justifyContent="center" mt={4} mb={4}>
+        <img src={logo} className="App-logo" alt="logo" style={{ objectFit: 'contain' }} />
+      </Box>
+
+      <Typography variant="h4" align="center" gutterBottom>
+        The Ultimate
+      </Typography>
+      <Typography variant="h2" align="center" gutterBottom>
+        Web3 Event Ticketing System
+      </Typography>
+      <div style={{ background: 'rgba(255, 255, 255, 0.7)', padding: '20px' }}>
+  <Typography paragraph sx={{ fontWeight: 'medium', fontSize: '1.2rem', textAlign: 'justify', lineHeight: 1.6 }}>
+    Welcome to our state-of-the-art Event Ticketing System! This platform is powered by blockchain technology, ensuring a secure and seamless experience for both event organizers and attendees.
+  </Typography>
+  <Typography paragraph sx={{ fontWeight: 'medium', fontSize: '1.2rem', textAlign: 'justify', lineHeight: 1.6 }}>
+    To take part in our innovative Event Ticketing System, follow these steps: Create a Wallet, Browse Events, Purchase Tickets, and Resell Tickets (Optional).
+  </Typography>
+  <Typography paragraph sx={{ fontWeight: 'medium', fontSize: '1.2rem', textAlign: 'justify', lineHeight: 1.6 }}>
+    Our Event Ticketing System offers a secure, transparent, and user-friendly solution for event organizers and attendees alike. Say goodbye to fraudulent tickets and scams, and embrace the future of event ticketing with our cutting-edge platform!
+  </Typography>
+</div>
+      
+      <Box my={4}><Divider /></Box>
+      <Typography variant="h4" align="center" gutterBottom>
+      </Typography>
       <EventList />
-      <hr />
-      <h2 className="section-title">Ticket Purchase</h2>
+      <Box my={4}><Divider /></Box>
+      <Typography variant="h4" align="center" gutterBottom>
+        Ticket Purchase
+      </Typography>
       <TicketPurchaseForm />
-      <hr />
-      <h2 className="section-title">Ticket Market</h2>
+      <Box my={4}><Divider /></Box>
+      <Typography variant="h4" align="center" gutterBottom>
+        Ticket Market
+      </Typography>
       <TicketList />
-      <hr />
-      <h2 className="section-title">Resale</h2>
+      <Box my={4}><Divider /></Box>
+      <Typography variant="h4" align="center" gutterBottom>
+        Resale
+      </Typography>
       <ResaleForm />
-    </div>
+      <Typography variant="h4" align="center" gutterBottom>
+        Personal Portal
+      </Typography>
+      <Portal />
+    </Container>
   );
 }
 
