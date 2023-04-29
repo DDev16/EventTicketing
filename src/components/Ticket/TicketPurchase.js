@@ -1,5 +1,11 @@
+import { AppBar, Toolbar, Typography, IconButton, Box, CircularProgress, Grid, List, ListItem, ListItemText, Card, CardContent, CardActions, Chip, Avatar, Collapse, CardMedia } from "@mui/material";
+import Alert from "@mui/material/Alert";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+import Modal from "@mui/material/Modal";
+import Stack from "@mui/material/Stack";
+
 import React, { useState, useEffect } from 'react';
-import { Button, Form, Alert, Modal, Spinner } from 'react-bootstrap';
 import { web3 } from '../web3';
 import EventTicketingABI from '../EventTicketingABI.json';
 import "../Ticket/TicketPurchase.css";
@@ -69,56 +75,68 @@ const TicketPurchase = () => {
   };
 
   return (
-    <div className="ticket-purchase">
-      <h2>Buy Ticket</h2>
+    <Box className="ticket-purchase">
+      <Typography variant="h4" gutterBottom>Buy Ticket</Typography>
       {error && (
-        <Alert variant="danger">{error}</Alert>
-)}
-{success && (
-<Alert variant="success">{success}</Alert>
-)}
-<Form onSubmit={handleSubmit}>
-<Form.Group controlId="eventId">
-<Form.Label>Event ID</Form.Label>
-<Form.Control type="number" placeholder="Enter event id" onChange={(e) => setEventId(e.target.value)} />
-</Form.Group>
-{remainingTickets !== null && remainingTickets === 0 && (
-<Alert variant="danger">This event is sold out.</Alert>
-)}
-{remainingTickets !== null && remainingTickets > 0 && (
-<Alert variant="info">
-There are only {remainingTickets} tickets left for this event. Purchase now to avoid disappointment!
-</Alert>
-)}
-<Button variant="primary" type="submit" disabled={!eventId || remainingTickets === 0 || loading}>
-{loading && <Spinner animation="border" size="sm" />} Purchase
-</Button>
-</Form>
-{ticketDetails && (
-<div className="ticket-details-container">
-<h1>Ticket Details</h1>
-<p>Event Name: {ticketDetails.eventName}</p>
-<p>Ticket Price: {ticketDetails.ticketPrice} ETH</p>
-<p>Purchase Date: {ticketDetails.purchaseDate}</p>
-<p>Owner Address: {ticketDetails.owner}</p>
-<Button variant="primary" onClick={() => setShowQR(true)}>View QR Code</Button>
-</div>
-)}
-<Modal show={showQR} onHide={handleCloseQR}>
-<Modal.Header closeButton>
-<Modal.Title>Your Ticket QR Code</Modal.Title>
-</Modal.Header>
-<Modal.Body>
-<QRCode value={qrData} size={256} />
-</Modal.Body>
-<Modal.Footer>
-<Button variant="secondary" onClick={handleCloseQR}>
-Close
-</Button>
-</Modal.Footer>
-</Modal>
-</div>
-);
+        <Alert severity="error">{error}</Alert>
+      )}
+      {success && (
+        <Alert severity="success">{success}</Alert>
+      )}
+      <form onSubmit={handleSubmit}>
+        <Stack spacing={3}>
+          <TextField
+            id="eventId"
+            label="Event ID"
+            type="number"
+            placeholder="Enter event id"
+            variant="outlined"
+            fullWidth
+            onChange={(e) => setEventId(e.target.value)}
+          />
+          {remainingTickets !== null && remainingTickets === 0 && (
+            <Alert severity="error">This event is sold out.</Alert>
+          )}
+          {remainingTickets !== null && remainingTickets > 0 && (
+            <Alert severity="info">
+              There are only {remainingTickets} tickets left for this event. Purchase now to avoid disappointment!
+            </Alert>
+          )}
+          <Button variant="contained" color="primary" type="submit" disabled={!eventId || remainingTickets === 0 || loading}>
+            {loading && <CircularProgress size={24} />} Purchase
+          </Button>
+        </Stack>
+      </form>
+      {ticketDetails && (
+        <Box className="ticket-details-container">
+          <Typography variant="h4" gutterBottom>Ticket Details</Typography>
+          <p>Event Name: {ticketDetails.eventName}</p>
+          <p>Ticket Price: {ticketDetails.ticketPrice} ETH</p>
+          <p>Purchase Date: {ticketDetails.purchaseDate}</p>
+          <p>Owner Address: {ticketDetails.owner}</p>
+          <Button variant="contained" color="primary" onClick={() => setShowQR(true)}>View QR Code</Button>
+        </Box>
+      )}
+      <Modal
+        open={showQR}
+        onClose={handleCloseQR}
+        aria-labelledby="modal-title"
+        aria-describedby="modal-description"
+      >
+        <Box sx={{ width: 400, p: 4 }}>
+          <Typography id="modal-title" variant="h6" component="h2">
+            Your Ticket QR Code
+          </Typography>
+          <Box my={2}>
+            <QRCode value={qrData} size={256} />
+          </Box>
+          <Button variant="outlined" color="secondary" onClick={handleCloseQR}>
+            Close
+          </Button>
+        </Box>
+      </Modal>
+    </Box>
+  );
 };
 
 export default TicketPurchase;

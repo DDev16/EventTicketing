@@ -40,21 +40,21 @@ const App = () => {
       <EventList />
       <Box my={4}><Divider /></Box>
       <Typography variant="h4" align="center" gutterBottom>
-        Ticket Purchase
+       
       </Typography>
-      <TicketPurchaseForm />
+      
       <Box my={4}><Divider /></Box>
       <Typography variant="h4" align="center" gutterBottom>
-        Ticket Market
+      
       </Typography>
       <TicketList />
       <Box my={4}><Divider /></Box>
       <Typography variant="h4" align="center" gutterBottom>
-        Resale
+        
       </Typography>
       <ResaleForm />
       <Typography variant="h4" align="center" gutterBottom>
-        Personal Portal
+       
       </Typography>
       <Portal />
     </Container>

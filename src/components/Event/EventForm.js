@@ -1,10 +1,16 @@
+
 import React, { useState, useEffect } from 'react';
-import { Button, Form, FormGroup, FormControl, FormLabel, Spinner } from 'react-bootstrap';
+import { Form, FormGroup, FormControl, FormLabel } from 'react-bootstrap';
+import { NFTStorage, File } from 'nft.storage';
+import { AppBar, Toolbar, Typography, IconButton, Box, CircularProgress, Grid, List, ListItem, ListItemText, Card, CardContent, CardActions, Chip, Avatar, Collapse, CardMedia } from '@mui/material';
 import './EventForm.css';
 import { web3, contract } from './web3';
-import { NFTStorage, File } from 'nft.storage';
+import { Button } from '@mui/material';
+import EventImage from '../Event/download (6).jpg';
 
-const apiKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDdGOTA4QjNBRDJGMDFGNjE2MjU1MTA0ODIwNjFmNTY5Mzc2QTg3MjYiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY3OTI5MDE5ODQyMCwibmFtZSI6Ik5FV0VTVCJ9.FGtIrIhKhgSx-10iVlI4sM_78o7jSghZsG5BpqZ4xfA'; // Replace with your API key from NFT.storage
+
+
+const apiKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDdGOTA4QjNBRDJGMDFGNjE2MjU1MTA0ODIwNjFmNTY5Mzc2QTg3MjYiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY3OTI5MDE5ODQyMCwibmFtZSI6Ik5FV0VTVCJ9.FGtIrIhKhgSx-10iVlI4sM_78o7jSghZsG5BpqZ4xfA';
 const client = new NFTStorage({ token: apiKey });
 
 const getMimeType = (file) => {
@@ -32,7 +38,7 @@ const EventForm = () => {
   });
 
   useEffect(() => {
-    console.log("fileUrl", fileUrl);
+    console.log('fileUrl', fileUrl);
   }, [fileUrl]);
 
   const handleChange = (e) => {
@@ -72,7 +78,7 @@ const EventForm = () => {
         name: formData.name,
         description: formData.description,
         image: new File([formData.image], formData.image.name, {
-          type: mimeType, // Set the correct MIME type
+          type: mimeType,
         }),
       });
       console.log('Image uploaded, metadata:', metadata);
@@ -89,7 +95,7 @@ const EventForm = () => {
           formData.organizer,
           web3.utils.toWei(formData.ticketPrice, 'ether'),
           formData.maxTicketsPerEvent,
-          metadata.url // Pass the metadata URL as a parameter
+          metadata.url
         )
         .send({ from: accounts[0] });
       console.log('Event created:', createEventResponse);
@@ -114,175 +120,205 @@ const EventForm = () => {
     }
   };
 
+  const handleUpdate = async (e) => {e.preventDefault();
+setLoading(true);
 
-  const handleUpdate = async (e) => {
-    e.preventDefault();
-    setLoading(true);
+try {
+  const accounts = await web3.eth.getAccounts();
 
-    try {
-      const accounts = await web3.eth.getAccounts();
+  const updateEventResponse = await contract.methods
+    .updateEventDetails(
+      updateId,
+      formData.name,
+      formData.date,
+      formData.time,
+      formData.venue,
+      formData.description,
+      formData.performers,
+      formData.organizer,
+      web3.utils.toWei(formData.ticketPrice, 'ether'),
+      fileUrl
+    )
+    .send({ from: accounts[0] });
+  console.log('Event updated:', updateEventResponse);
 
-      const updateEventResponse = await contract.methods
-        .updateEventDetails(
-          updateId,
-          formData.name,
-          formData.date,
-          formData.time,
-          formData.venue,
-          formData.description,
-          formData.performers,
-          formData.organizer,
-          web3.utils.toWei(formData.ticketPrice, 'ether'),
-          fileUrl // Pass the image CID as a parameter
-        )
-        .send({ from: accounts[0] });
-      console.log('Event updated:', updateEventResponse);
-
-      setUpdateId('');
-    } catch (error) {
-      console.error('Error updating event:', error);
-      alert('An error occurred while updating the event. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  };
+  setUpdateId('');
+} catch (error) {
+  console.error('Error updating event:', error);
+  alert('An error occurred while updating the event. Please try again.');
+} finally {
+  setLoading(false);
+}
+};
 
 
-  return (
-    <div className="EventForm">
-    
-      <Form onSubmit={handleSubmit}>
-        <FormGroup>
-          <FormLabel>Event Name</FormLabel>
-          <FormControl
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-          />
-        </FormGroup>
-        <FormGroup>
-          <FormLabel>Event Date</FormLabel>
-          <FormControl
-            type="date"
-            name="date"
-            value={formData.date}
-            onChange={handleChange}
-          />
-        </FormGroup>
-        <FormGroup>
-          <FormLabel>Event Time</FormLabel>
-          <FormControl
-            type="time"
-            name="time"
-            value={formData.time}
-            onChange={handleChange}
-          />
-        </FormGroup>
-        <FormGroup>
-          <FormLabel>Event Venue</FormLabel>
-          <FormControl
-            type="text"
-            name="venue"
-            value={formData.venue}
-            onChange={handleChange}
-          />
-        </FormGroup>
-        <FormGroup>
-          <FormLabel>Event Description</FormLabel>
-          <FormControl
-            as="textarea"
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-          />
-        </FormGroup>
-        <FormGroup>
-          <FormLabel>Performers</FormLabel>
-          <FormControl
-            type="text"
-            name="performers"
-            value={formData.performers}
-            onChange={handleChange}
-          />
-        </FormGroup>
-        <FormGroup>
-          <FormLabel>Organizer</FormLabel>
-          <FormControl
-            type="text"
-            name="organizer"
-            value={formData.organizer}
-            onChange={handleChange}
-          />
-        </FormGroup>
-        <FormGroup>
-          <FormLabel>Ticket Price (ETH)</FormLabel>
-          <FormControl
-            type="number"
-            step="0.01"
-            name="ticketPrice"
-            value={formData.ticketPrice}
-            onChange={handleChange}
-          />
-        </FormGroup>
-        <FormGroup>
-          <FormLabel>Max Tickets per Event</FormLabel>
-          <FormControl
-            type="number"
-            name="maxTicketsPerEvent"
-            value={formData.maxTicketsPerEvent}
-            onChange={handleChange}
-          />
-        </FormGroup>
-        <FormGroup>
-          
-          <FormLabel>Event Image</FormLabel>
-          <FormControl
-            type="file"
-            name="image"
-            accept="image/*"
-            onChange={handleChange}
-          />
-        </FormGroup>
-      
-        <div className="Button">
+return (
+  <Box sx={{ flexGrow: 1 }}>
+    <AppBar position="static">
+      <Toolbar>
+        <IconButton size="large" edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            Event Form
+          </Typography>
+        </IconButton>
+      </Toolbar>
+    </AppBar>
+    <Box sx={{ p: 2 }}>
+      <Grid container spacing={2}>
+        <Grid item xs={12} sm={6}>
+          <Card>
+            <CardMedia component="img" height="300" image={EventImage} alt="Event" />
+            <CardContent>
+              <Typography gutterBottom variant="h5" component="div">
+                Event Details
+              </Typography>
+              <form onSubmit={handleSubmit}>
+                <List>
+                  <ListItem>
+                    <ListItemText primary="Event Name" />
+                    <FormControl type="text" name="name" value={formData.name} onChange={handleChange} />
+                  </ListItem>
+                  <ListItem>
+                    <ListItemText primary="Event Date" />
+                    <FormControl type="date" name="date" value={formData.date} onChange={handleChange} />
+                  </ListItem>
+                  <ListItem>
+                    <ListItemText primary="Event Time" />
+                    <FormControl type="time" name="time" value={formData.time} onChange={handleChange} />
+                  </ListItem>
+                  <ListItem>
+                    <ListItemText primary="Event Venue" />
+                    <FormControl type="text" name="venue" value={formData.venue} onChange={handleChange} />
+                  </ListItem>
+                  <ListItem>
+                    <ListItemText primary="Event Description" />
+                    <FormControl as="textarea" name="description" value={formData.description} onChange={handleChange} />
+                  </ListItem>
+                  <ListItem>
+                    <ListItemText primary="Performers" />
+                    <FormControl type="text" name="performers" value={formData.performers} onChange={handleChange} />
+                  </ListItem>
+                  <ListItem>
+                    <ListItemText primary="Organizer" />
+                    <FormControl type="text" name="organizer" value={formData.organizer} onChange={handleChange} />
+                  </ListItem>
+                  <ListItem>
+                    <ListItemText primary="Ticket Price (ETH)" />
+                    <FormControl type="number" step="0.01" name="ticketPrice" value={formData.ticketPrice} onChange={handleChange} />
+                  </ListItem>
+                  <ListItem>
+                    <ListItemText primary="Max Tickets per Event" />
+                    <FormControl type="number" name="maxTicketsPerEvent" value={formData.maxTicketsPerEvent} onChange={handleChange} />
+                  </ListItem>
+                  <ListItem>
+                    <ListItemText primary="Event Image" />
+                    <FormControl type="file" name="image" accept="
+image/*" onChange={handleChange} />
+</ListItem>
+<ListItem>
+<CardActions>
 <Button type="submit" disabled={loading}>
 Create Event
 </Button>
-<FormGroup>
-  <FormLabel>Event ID to Update</FormLabel>
-  <FormControl
-    type="number"
-    name="updateId"
-    value={updateId}
-    onChange={(e) => setUpdateId(e.target.value)}
-  />
-</FormGroup>
-
-<Button type="button" onClick={handleUpdate} disabled={loading}>
-  Update Event
+</CardActions>
+</ListItem>
+</List>
+</form>
+</CardContent>
+</Card>
+</Grid>
+<Grid item xs={12} sm={6}>
+<Card>
+<CardContent>
+<Typography gutterBottom variant="h5" component="div">
+Update Event
+</Typography>
+<List>
+<ListItem>
+<ListItemText primary="Event ID to Update" />
+<FormControl type="number" name="updateId" value={updateId} onChange={(e) => setUpdateId(e.target.value)} />
+</ListItem>
+<ListItem>
+<ListItemText primary="Event Name" />
+<FormControl type="text" name="name" value={formData.name} onChange={handleChange} />
+</ListItem>
+<ListItem>
+<ListItemText primary="Event Date" />
+<FormControl type="date" name="date" value={formData.date} onChange={handleChange} />
+</ListItem>
+<ListItem>
+<ListItemText primary="Event Time" />
+<FormControl type="time" name="time" value={formData.time} onChange={handleChange} />
+</ListItem>
+<ListItem>
+<ListItemText primary="Event Venue" />
+<FormControl type="text" name="venue" value={formData.venue} onChange={handleChange} />
+</ListItem>
+<ListItem>
+<ListItemText primary="Event Description" />
+<FormControl as="textarea" name="description" value={formData.description} onChange={handleChange} />
+</ListItem>
+<ListItem>
+<ListItemText primary="Performers" />
+<FormControl type="text" name="performers" value={formData.performers} onChange={handleChange} />
+</ListItem>
+<ListItem>
+<ListItemText primary="Organizer" />
+<FormControl type="text" name="organizer" value={formData.organizer} onChange={handleChange} />
+</ListItem>
+<ListItem>
+<ListItemText primary="Ticket Price (ETH)" />
+<FormControl type="number" step="0.01" name="ticketPrice" value={formData.ticketPrice} onChange={handleChange} />
+</ListItem>
+<ListItem>
+<ListItemText primary="Event Image" />
+<Button
+                 variant="contained"
+                 component="label"
+                 disabled={loading}
+               >
+Upload Image
+<input
+                   type="file"
+                   name="image"
+                   accept="image/*"
+                   hidden
+                   onChange={handleChange}
+                 />
 </Button>
-
-</div>
+</ListItem>
+<ListItem>
+<Collapse in={fileUrl !== null}>
+<Box sx={{ display: 'flex', alignItems: 'center' }}>
+<Avatar sx={{ mr: 2 }}>
+<img src={fileUrl} alt="File URL" />
+</Avatar>
+<Chip label={fileUrl} />
+</Box>
+</Collapse>
+</ListItem>
+<ListItem>
+<CardActions>
+<Button type="button" onClick={handleUpdate} disabled={loading}>
+Update Event
+</Button>
+</CardActions>
+</ListItem>
+</List>
+</CardContent>
+</Card>
+</Grid>
+</Grid>
 {loading && (
-<div className="text-center">
-<Spinner animation="border" role="status">
-<span className="visually-hidden">Uploading image to NFT.storage, please wait...</span>
-</Spinner>
-<p>Uploading image to NFT.storage, please wait...</p>
-</div>
+<Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mt: 2 }}>
+<CircularProgress size={24} />
+<Typography variant="subtitle1" component="div" sx={{ ml: 1 }}>
+Uploading image to NFT.storage, please wait...
+</Typography>
+</Box>
 )}
-</Form>
-{previewImage && (
-<img
-src={previewImage}
-alt="Preview"
-style={{ maxWidth: '400px', height: '400px', marginTop: '10px' }}
-/>
-)}
-</div>
-
-
+</Box>
+</Box>
 );
 };
 
