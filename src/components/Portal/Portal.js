@@ -9,6 +9,8 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { useTheme, useMediaQuery } from '@mui/material';
 
 
+import placeholderImageUrl from './ef.jpg'
+
 const StyledCard = styled(Card)(({ theme }) => ({
     marginBottom: theme.spacing(2),
     borderRadius: '10px',
@@ -43,7 +45,6 @@ const Portal = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [expanded, setExpanded] = useState(null);
     const [openEvents, setOpenEvents] = useState([]);
-    const placeholderImageUrl = "ef.jpg";
     const theme = useTheme();
 const isXsScreen = useMediaQuery(theme.breakpoints.down('xs'));
 
