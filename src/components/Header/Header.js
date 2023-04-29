@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { AppBar, Toolbar, Typography, IconButton, Button, useMediaQuery, useTheme, Drawer, List, ListItem, ListItemText } from '@mui/material';
+import { AppBar, Toolbar, Typography, IconButton, Button, useMediaQuery, useTheme, Drawer, List, ListItem, ListItemText, Box } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import { NavLink } from 'react-router-dom';
+import logo from './logo.png';
 
 const Header = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -27,6 +28,9 @@ const Header = () => {
 
   return (
     <>
+     <Box display="flex" justifyContent="center" mt={4} mb={4}>
+                <img src={logo} className="App-logo" alt="logo" style={{ objectFit: 'contain' }} />
+              </Box>
       <AppBar position="static">
         <Toolbar>
           {isMobile ? (

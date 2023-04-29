@@ -99,6 +99,7 @@ const handleExpandClick = (id) => {
 
 return (
     <>
+     <div style={{ background: 'rgba(255, 255, 255, 0.7)', padding: '20px' }}>
         <StyledAppBar position="static">
             
         </StyledAppBar>
@@ -195,6 +196,7 @@ return (
 
         <EventForm />
     </Box>
+    </div>
 </>
 );
 

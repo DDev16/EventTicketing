@@ -3,25 +3,16 @@ import {
   AppBar,
   Toolbar,
   Typography,
-  IconButton,
   Box,
-  CircularProgress,
   Grid,
-  List,
-  ListItem,
-  ListItemText,
   Card,
   CardContent,
   CardActions,
-  Chip,
-  Avatar,
-  Collapse,
   CardMedia,
   TextField,
   Button,
   } from "@mui/material";
   import { styled } from "@mui/system";
-  import { ExpandLess, ExpandMore } from "@mui/icons-material";
   
   import { useState, useEffect, useCallback } from "react";
   import { web3, contract } from "../web3.js";
@@ -96,59 +87,51 @@ import {
   }
   
   return (
-  <Box className="container">
-  <ElegantAppBar position="static">
-  <Toolbar>
-  <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-  Ticket Resale Marketplace
-  </Typography>
-  </Toolbar>
-  </ElegantAppBar>
-  <Box className="search-container">
-  <TextField
-         type="text"
-         label="Search by event ID"
-         variant="outlined"
-         value={search}
-         onChange={handleSearchInput}
-         fullWidth
-       />
-  </Box>
-  <Grid container spacing={2} className="tickets-container">
-  {tickets
-  .filter((ticket) => ticket.eventId.includes(search))
-  .map((ticket) => (
-  <Grid item xs={12} sm={6} md={4} key={ticket.ticketId}>
-  <Card>
-  
-              <CardMedia
-                component="img"
-                height="140"
-                image={ticket.imageUrl ? ticket.imageUrl : ticketImage}
-                alt="Ticket"
-              />
-  
-              <CardContent>
-                <Typography variant="h6">Ticket ID: {ticket.ticketId}</Typography>
-                <Typography variant="body1">Event ID: {ticket.eventId}</Typography>
-                <Typography variant="body1">Price: ${ticket.price}</Typography>
-                <Typography variant="body1">Owner: {ticket.owner}</Typography>
-              </CardContent>
-  
-              <CardActions>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => buyResaleTicket(ticket.ticketId, ticket.price)}
-                >
-                  Buy Ticket
-                </Button>
-              </CardActions>
-            </Card>
-          </Grid>
-        ))}
-    </Grid>
-  </Box>
+    <div style={{ background: 'rgba(255, 255, 255, 0.7)', padding: '20px' }}>
+    <Box className="container">
+      <Box className="search-container">
+        <TextField
+          type="text"
+          label="Search by event ID"
+          variant="outlined"
+          value={search}
+          onChange={handleSearchInput}
+          fullWidth
+        />
+      </Box>
+      <Grid container spacing={2} className="tickets-container">
+        {tickets
+          .filter((ticket) => ticket.eventId.includes(search))
+          .map((ticket) => (
+            <Grid item xs={12} sm={6} md={4} key={ticket.ticketId}>
+              <Card>
+                <CardMedia
+                  component="img"
+                  height="140"
+                  image={ticket.imageUrl ? ticket.imageUrl : ticketImage}
+                  alt="Ticket"
+                />
+                <CardContent>
+                  <Typography variant="h6">Ticket ID: {ticket.ticketId}</Typography>
+                  <Typography variant="body1">Event ID: {ticket.eventId}</Typography>
+                  <Typography variant="body1">Price: ${ticket.price}</Typography>
+                  <Typography variant="body1">Owner: {ticket.owner}</Typography>
+                </CardContent>
+                <CardActions>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => buyResaleTicket(ticket.ticketId, ticket.price)}
+                  >
+                    Buy Ticket
+                  </Button>
+                </CardActions>
+              </Card>
+            </Grid>
+          ))}
+      </Grid>
+    </Box>
+    </div>
   );
   }
   

@@ -2,11 +2,9 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import EventList from './components/Event/EventList';
-import TicketPurchaseForm from './components/Ticket/TicketPurchase';
 import ResaleForm from './components/Ticket/TicketResale';
 import TicketList from './components/Ticket/TicketList';
 import './App.css';
-import logo from './logo.png';
 import Portal from './components/Portal/Portal';
 import { Container, Typography, Box, Divider } from '@mui/material';
 import Header from './components/Header/Header.js'
@@ -22,9 +20,6 @@ const App = () => {
         <Routes>
           <Route path="/" element={
             <>
-              <Box display="flex" justifyContent="center" mt={4} mb={4}>
-                <img src={logo} className="App-logo" alt="logo" style={{ objectFit: 'contain' }} />
-              </Box>
               <Typography variant="h4" align="center" gutterBottom>
                 The Ultimate
               </Typography>

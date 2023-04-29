@@ -75,6 +75,8 @@ transition: all 0.3s ease-in-out;
 `;
 
 return (
+  <div style={{ background: 'rgba(255, 255, 255, 0.7)', padding: '20px' }}>
+
 <Box>
 <AppBar position="static">
 <Toolbar>
@@ -151,6 +153,7 @@ Description: {event.description}
     </Grid>
   )}
 </Box>
+</div>
 );
 };
 
