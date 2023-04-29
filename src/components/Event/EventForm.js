@@ -1,8 +1,8 @@
 
 import React, { useState, useEffect } from 'react';
-import { Form, FormGroup, FormControl, FormLabel } from 'react-bootstrap';
+import {  FormControl } from 'react-bootstrap';
 import { NFTStorage, File } from 'nft.storage';
-import { AppBar, Toolbar, Typography, IconButton, Box, CircularProgress, Grid, List, ListItem, ListItemText, Card, CardContent, CardActions, Chip, Avatar, Collapse, CardMedia } from '@mui/material';
+import { AppBar,  Typography, Box, CircularProgress, Grid, List, ListItem, ListItemText, Card, CardContent, CardActions, Chip, Avatar, Collapse, CardMedia } from '@mui/material';
 import './EventForm.css';
 import { web3, contract } from './web3';
 import { Button } from '@mui/material';
@@ -37,15 +37,12 @@ const EventForm = () => {
     image: null,
   });
 
-  useEffect(() => {
-    console.log('fileUrl', fileUrl);
-  }, [fileUrl]);
 
   const handleChange = (e) => {
     const target = e.target;
     const value = target.type === 'file' ? target.files[0] : target.value;
     const name = target.name;
-
+  
     if (name === 'image') {
       const reader = new FileReader();
       reader.readAsDataURL(value);
@@ -53,9 +50,11 @@ const EventForm = () => {
         setPreviewImage(e.target.result);
       };
     }
-
+  
     setFormData({ ...formData, [name]: value });
   };
+  
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -70,7 +69,15 @@ const EventForm = () => {
         alert('Please upload an image for the event.');
         return;
       }
-      setFileUrl(formData.image);
+
+      if (formData.image) {
+        const reader = new FileReader();
+        reader.readAsDataURL(formData.image);
+        reader.onload = (e) => {
+          setFileUrl(e.target.result);
+        };
+      }
+      
 
       const mimeType = getMimeType(formData.image);
       console.log('Uploading image to NFT.storage...');
@@ -204,10 +211,11 @@ return (
                     <FormControl type="number" name="maxTicketsPerEvent" value={formData.maxTicketsPerEvent} onChange={handleChange} />
                   </ListItem>
                   <ListItem>
-                    <ListItemText primary="Event Image" />
-                    <FormControl type="file" name="image" accept="
-image/*" onChange={handleChange} />
+  <ListItemText primary="Event Image" />
+  <FormControl type="file" name="image" accept="image/*" onChange={handleChange} />
+  {previewImage && <img src={previewImage} alt="Preview" style={{ maxHeight: '100px' }} />}
 </ListItem>
+
 <ListItem>
 <CardActions>
 <Button type="submit" disabled={loading}>
@@ -283,9 +291,14 @@ Upload Image
 <ListItem>
 <Collapse in={fileUrl !== null}>
 <Box sx={{ display: 'flex', alignItems: 'center' }}>
-<Avatar sx={{ mr: 2 }}>
-<img src={fileUrl} alt="File URL" />
-</Avatar>
+
+{previewImage && (
+  <Avatar sx={{ mr: 2 }}>
+    <img src={previewImage} alt="File URL" />
+  </Avatar>
+)}
+
+
 <Chip label={fileUrl} />
 </Box>
 </Collapse>
