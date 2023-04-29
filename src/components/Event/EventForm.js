@@ -23,6 +23,8 @@ const EventForm = () => {
   const [fileUrl, setFileUrl] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
   const [updateId, setUpdateId] = useState('');
+  const [eventCreationResponse, setEventCreationResponse] = useState(null);
+  const [createEventResponse, setCreateEventResponse] = useState(null);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -105,7 +107,8 @@ const EventForm = () => {
           metadata.url
         )
         .send({ from: accounts[0] });
-      console.log('Event created:', createEventResponse);
+        console.log('Event created:', createEventResponse);
+        setEventCreationResponse(createEventResponse);
 
       setFormData({
         name: '',
@@ -125,6 +128,7 @@ const EventForm = () => {
     } finally {
       setLoading(false);
     }
+
   };
 
   const handleUpdate = async (e) => {e.preventDefault();
@@ -215,6 +219,32 @@ return (
   <FormControl type="file" name="image" accept="image/*" onChange={handleChange} />
   {previewImage && <img src={previewImage} alt="Preview" style={{ maxHeight: '100px' }} />}
 </ListItem>
+{eventCreationResponse && (
+  <Grid item xs={12}>
+    <Card>
+      <CardContent>
+        <Typography gutterBottom variant="h5" component="div">
+          Event Creation Response
+        </Typography>
+        <List>
+          <ListItem>
+            <ListItemText primary="Transaction Hash" secondary={eventCreationResponse.transactionHash} />
+          </ListItem>
+          <ListItem>
+            <ListItemText primary="Block Number" secondary={eventCreationResponse.blockNumber} />
+          </ListItem>
+          <ListItem>
+            <ListItemText primary="From Address" secondary={eventCreationResponse.from} />
+          </ListItem>
+          <ListItem>
+            <ListItemText primary="To Address" secondary={eventCreationResponse.to} />
+          </ListItem>
+        </List>
+      </CardContent>
+    </Card>
+  </Grid>
+)}
+
 
 <ListItem>
 <CardActions>
