@@ -75,16 +75,15 @@ transition: all 0.3s ease-in-out;
 `;
 
 return (
-  <div style={{ background: 'rgba(255, 255, 255, 0.7)', padding: '20px' }}>
+  <div style={{ background: 'rgba(255, 255, 255, 0.7)', padding: '20px', display: 'flex', justifyContent: 'center', width: '100%' }}>
 
 <Box>
 <AppBar position="static">
 <Toolbar>
-<div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
   <Typography variant="h4">
     Event List
   </Typography>
-</div>
+
 
 
 </Toolbar>

@@ -108,14 +108,14 @@ const TicketPurchase = () => {
         </Stack>
       </form>
       {ticketDetails && (
-        <Box className="ticket-details-container">
-          <Typography variant="h4" gutterBottom>Ticket Details</Typography>
-          <p>Event Name: {ticketDetails.eventName}</p>
-          <p>Ticket Price: {ticketDetails.ticketPrice} ETH</p>
-          <p>Purchase Date: {ticketDetails.purchaseDate}</p>
-          <p>Owner Address: {ticketDetails.owner}</p>
-          <Button variant="contained" color="primary" onClick={() => setShowQR(true)}>View QR Code</Button>
-        </Box>
+       <Box className="ticket-details-container">
+       <Typography variant="h4" gutterBottom>Ticket Details</Typography>
+       <Typography variant="body1">Event Name: {ticketDetails.eventName}</Typography>
+       <Typography variant="body1">Ticket Price: {ticketDetails.ticketPrice} ETH</Typography>
+       <Typography variant="body1">Purchase Date: {ticketDetails.purchaseDate}</Typography>
+       <Typography variant="body1">Owner Address: {ticketDetails.owner}</Typography>
+       <Button variant="contained" color="primary" onClick={() => setShowQR(true)}>View QR Code</Button>
+     </Box>
       )}
       <Modal
         open={showQR}

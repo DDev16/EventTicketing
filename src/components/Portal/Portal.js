@@ -70,6 +70,10 @@ const isXsScreen = useMediaQuery(theme.breakpoints.down('xs'));
             const tickets = [];
             const openEventsArray = [];
         
+            // Clear the userTickets and openEvents arrays
+            setUserTickets([]);
+            setOpenEvents([]);
+        
             for (let i = 1; i <= totalTickets; i++) {
                 const owner = await contract.methods.ownerOf(i).call();
                 if (owner === account) {
@@ -80,18 +84,17 @@ const isXsScreen = useMediaQuery(theme.breakpoints.down('xs'));
                     // Check if the event is open
                     if (eventDetails.status === "open") {
                         openEventsArray.push(eventDetails);
-}
-}
-}
-setUserTickets(tickets);
-setOpenEvents(openEventsArray);
-setIsLoading(false);
-};
-
-    if (account) {
+                    }
+                }
+            }
+            setUserTickets(tickets);
+            setOpenEvents(openEventsArray);
+            setIsLoading(false);
+        };
+        
+    
         loadTickets();
-    }
-}, [account]);
+    }, [account]);
 
 const handleExpandClick = (id) => {
     setExpanded(expanded === id ? null : id);

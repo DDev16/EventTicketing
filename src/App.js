@@ -9,6 +9,24 @@ import Portal from './components/Portal/Portal';
 import { Container, Typography, Box, Divider } from '@mui/material';
 import Header from './components/Header/Header.js'
 import EventForm from './components/Event/EventForm';
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+import ScrollAnimation from 'react-animate-on-scroll';
+import 'animate.css/animate.min.css';
+
+
+ // Configure the slider settings
+ const sliderSettings = {
+  dots: true,
+  infinite: true,
+  speed: 500,
+  slidesToShow: 1,
+  slidesToScroll: 1,
+  autoplay: true,
+  autoplaySpeed: 3000,
+  arrows: true,
+};
 
 
 
@@ -18,14 +36,26 @@ const App = () => {
       <Container maxWidth="md">
         <Header />
         <Routes>
-          <Route path="/" element={
-            <>
-              <Typography variant="h4" align="center" gutterBottom>
-                The Ultimate
-              </Typography>
-              <Typography variant="h2" align="center" gutterBottom>
-                Web3 Event Ticketing System
-                </Typography>
+          <Route
+            path="/"
+            element={
+              <>
+                <Slider {...sliderSettings}>
+                  <div>
+                    <ScrollAnimation animateIn="fadeIn">
+                      <Typography variant="h4" align="center" gutterBottom>
+                        The Ultimate
+                      </Typography>
+                    </ScrollAnimation>
+                  </div>
+                  <div>
+                    <ScrollAnimation animateIn="fadeIn">
+                      <Typography variant="h2" align="center" gutterBottom>
+                        Web3 Event Ticketing System
+                      </Typography>
+                    </ScrollAnimation>
+                  </div>
+                </Slider>
                 <div style={{ background: 'rgba(255, 255, 255, 0.7)', padding: '20px' }}>
   <Typography variant="h4" sx={{ fontWeight: 'bold', textAlign: 'center', marginBottom: '1rem' }}>Welcome to Our Smart Event Ticketing Platform!</Typography>
   <Typography paragraph sx={{ fontWeight: 'medium', fontSize: '1.2rem', textAlign: 'justify', lineHeight: 1.6, color: 'black' }}>

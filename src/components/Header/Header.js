@@ -3,6 +3,8 @@ import { AppBar, Toolbar, Typography, IconButton, Button, useMediaQuery, useThem
 import MenuIcon from '@mui/icons-material/Menu';
 import { NavLink } from 'react-router-dom';
 import logo from './logo.png';
+import './Header.css';
+
 
 const Header = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -26,11 +28,16 @@ const Header = () => {
     { title: 'Event Form', link: '/Form' },
   ];
 
+  const LinkComponent = React.forwardRef((props, ref) => (
+    <NavLink ref={ref} {...props} />
+  ));
+  
+
   return (
     <>
-     <Box display="flex" justifyContent="center" mt={4} mb={4}>
-                <img src={logo} className="App-logo" alt="logo" style={{ objectFit: 'contain' }} />
-              </Box>
+      <Box display="flex" justifyContent="center" mt={4} mb={4}>
+        <img src={logo} className="App-logo" alt="logo" style={{ objectFit: 'contain' }} />
+      </Box>
       <AppBar position="static">
         <Toolbar>
           {isMobile ? (
@@ -38,13 +45,16 @@ const Header = () => {
               <MenuIcon />
             </IconButton>
           ) : null}
-          <Typography variant="h6">
-            Event Ticketing System
-          </Typography>
+          <Typography variant="h6">Event Ticketing System</Typography>
           {!isMobile ? (
             <>
-              {menuItems.map(item => (
-                <Button color="inherit" key={item.title} component={NavLink} to={item.link} activeClassName="active">
+              {menuItems.map((item) => (
+                <Button
+                  color="inherit"
+                  key={item.title}
+                  component={LinkComponent}
+                  to={item.link}
+                >
                   {item.title}
                 </Button>
               ))}
@@ -55,8 +65,14 @@ const Header = () => {
       {isMobile ? (
         <Drawer open={drawerOpen} onClose={closeDrawer}>
           <List>
-            {menuItems.map(item => (
-              <ListItem button key={item.title} onClick={closeDrawer} component={NavLink} to={item.link} activeClassName="active">
+            {menuItems.map((item) => (
+              <ListItem
+                button
+                key={item.title}
+                onClick={closeDrawer}
+                component={LinkComponent}
+                to={item.link}
+              >
                 <ListItemText primary={item.title} />
               </ListItem>
             ))}
