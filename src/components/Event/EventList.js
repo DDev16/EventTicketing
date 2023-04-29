@@ -78,9 +78,13 @@ return (
 <Box>
 <AppBar position="static">
 <Toolbar>
-<Typography variant="h2">
-Event List
-</Typography>
+<div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+  <Typography variant="h4">
+    Event List
+  </Typography>
+</div>
+
+
 </Toolbar>
 </AppBar>
 {loading ? (
