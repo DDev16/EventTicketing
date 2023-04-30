@@ -2,11 +2,13 @@
 
 body {
   background-image: url('https://source.unsplash.com/1600x900/?concert');
+  background-color: #000; /* Fallback color */
   background-size: cover;
   font-family: 'Roboto', sans-serif;
   color: #fff;
   margin: 0;
 }
+
 
 .container {
   padding-top: 50px;

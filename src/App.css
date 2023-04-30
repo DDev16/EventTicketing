@@ -1,10 +1,15 @@
 body {
   //background-image: url('./pic.jpg');
-  background-size: cover;
 
-  background-position: center;
-  background-repeat: repeat;
-  height: 100vh;
+}
+
+body {
+  background-image: url('https://source.unsplash.com/1600x900/?concert');
+  background-color: #000; /* Fallback color */
+  background-size: cover;
+  font-family: 'Roboto', sans-serif;
+  color: #fff;
+  margin: 0;
 }
 
 
@@ -63,7 +68,6 @@ body {
 
 .app-container:before {
   content: "";
-  background-image: url("https://www.google.com/imgres?imgurl=https%3A%2F%2Fpng.pngtree.com%2Fthumb_back%2Ffh260%2Fbackground%2F20200801%2Fpngtree-purple-abstract-background-fluid-gradient-with-wave-forms-image_375467.jpg&tbnid=z6nrvZo4o_kc1M&vet=12ahUKEwi34LCjy8f-AhXLOUQIHapQCBUQMygCegUIARDqAQ..i&imgrefurl=https%3A%2F%2Fpngtree.com%2Ffree-backgrounds-photos%2Fform&docid=_Efvfr2X7YBCLM&w=555&h=260&q=STLYISH%20BACKGROUND%20IMAGE%20FOR%20A%20FORM&ved=2ahUKEwi34LCjy8f-AhXLOUQIHapQCBUQMygCegUIARDqAQ");
   background-size: cover;
   opacity: 0.3;
   top: 0;

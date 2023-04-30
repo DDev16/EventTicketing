@@ -7,57 +7,58 @@ import image1 from '../Ticket/ef.jpg';
 import image2 from '../Ticket/ll.jpg';
 
 const EventList = () => {
-const [events, setEvents] = useState([]);
-const [loading, setLoading] = useState(false);
-const [errorSnackbar, setErrorSnackbar] = useState({ open: false, message: '' });
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [errorSnackbar, setErrorSnackbar] = useState({ open: false, message: '' });
 
-const fetchEvents = async () => {
-setLoading(true);
-const numberOfEvents = await contract.methods.getNumberOfEvents().call();
-const eventsData = [];
+  const fetchEvents = async () => {
+    setLoading(true);
+    const numberOfEvents = await contract.methods.getNumberOfEvents().call();
+    const eventsData = [];
 
-for (let i = 1; i <= numberOfEvents; i++) {
-  const event = await contract.methods.getEventDetails(i).call();
-  let imageUrl;
+    for (let i = 1; i <= numberOfEvents; i++) {
+      const event = await contract.methods.getEventDetails(i).call();
+      const remainingTickets = await contract.methods.getRemainingTickets(i).call(); // Fetch remaining tickets
+      let imageUrl;
 
-  if (i % 2 === 0) {
-    imageUrl = image1;
-  } else {
-    imageUrl = image2;
-  }
+      if (i % 2 === 0) {
+        imageUrl = image1;
+      } else {
+        imageUrl = image2;
+      }
 
-  eventsData.push({ ...event, id: i, imageUrl });
-}
+      eventsData.push({ ...event, id: i, imageUrl, remainingTickets }); // Add remainingTickets to the event data
+    }
 
-setEvents(eventsData);
-setLoading(false);
-};
+    setEvents(eventsData);
+    setLoading(false);
+  };
 
-useEffect(() => {
-fetchEvents();
-}, []);
+  useEffect(() => {
+    fetchEvents();
+  }, []);
 
-const handleBuyTicket = async (eventId) => {
-  try {
-    const accounts = await web3.eth.getAccounts();
-    await contract.methods.buyTicket(eventId).send({
-      from: accounts[0],
-      value: events.find(event => event.id === eventId).ticketPrice,
-    });
-    console.log("Ticket purchased successfully");
-  } catch (error) {
-    console.error(error);
-    setErrorSnackbar({ open: true, message: 'Error: Unable to purchase ticket. All tickets might be sold.' });
-  }
-};
-
-
-const handleCloseSnackbar = () => {
-  setErrorSnackbar({ ...errorSnackbar, open: false });
-};
+  const handleBuyTicket = async (eventId) => {
+    try {
+      const accounts = await web3.eth.getAccounts();
+      await contract.methods.buyTicket(eventId).send({
+        from: accounts[0],
+        value: events.find(event => event.id === eventId).ticketPrice,
+      });
+      console.log("Ticket purchased successfully");
+    } catch (error) {
+      console.error(error);
+      setErrorSnackbar({ open: true, message: 'Error: Unable to purchase ticket. All tickets might be sold.' });
+    }
+  };
 
 
-const StyledCardMedia = styled(CardMedia)`
+  const handleCloseSnackbar = () => {
+    setErrorSnackbar({ ...errorSnackbar, open: false });
+  };
+
+
+  const StyledCardMedia = styled(CardMedia)`
 width: 70%;
 height: 400px;
 margin: 0 auto;
@@ -74,86 +75,89 @@ transition: all 0.3s ease-in-out;
 }
 `;
 
-return (
-  <div style={{ background: 'rgba(255, 255, 255, 0.7)', padding: '20px', display: 'flex', justifyContent: 'center', width: '100%' }}>
+  return (
+    <div style={{ background: 'rgba(255, 255, 255, 0.7)', padding: '20px', display: 'flex', justifyContent: 'center', width: '100%' }}>
 
-<Box>
-<AppBar position="static">
-<Toolbar>
-  <Typography variant="h4">
-    Event List
-  </Typography>
+      <Box>
+        <AppBar position="static">
+          <Toolbar>
+            <Typography variant="h4">
+              Event List
+            </Typography>
 
 
 
-</Toolbar>
-</AppBar>
-{loading ? (
-<Box display="flex" justifyContent="center" alignItems="center" height="100vh">
-<CircularProgress />
-</Box>
-) : (
-<Grid container spacing={2}>
-{events.map((event) => (
-<Grid item xs={12} md={6} key={event.id}>
-<Card>
-<StyledCardMedia
-               component="img"
-               alt={event.name}
-               height={400}
-               image={event.imageUrl}
-               title={event.name}
-             />
-<CardContent>
-<Typography gutterBottom variant="h5" component="h1">
-{event.name}
-</Typography>
-<Typography variant="body2" color="textSecondary" component="p">
-Date: {event.date}
-</Typography>
-<Typography variant="body2" color="textSecondary" component="p">
-Time: {event.time}
-</Typography>
-<Typography variant="body2" color="textSecondary" component="p">
-Venue: {event.venue}
-</Typography>
-<Typography variant="body2" color="textSecondary" component="p">
-Description: {event.description}
-              </Typography>
-              <Typography variant="body2" color="textSecondary" component="p">
-                Performers: {event.performers}
-              </Typography>
-              <Typography variant="body2" color="textSecondary" component="p">
-                Organizer: {event.organizer}
-              </Typography>
-              <Typography variant="body2" color="textSecondary" component="p">
-                Ticket Price (ETH): {web3.utils.fromWei(event.ticketPrice, 'ether')}
-              </Typography>
-              <Typography variant="body2" color="textSecondary" component="p">
-                Max Tickets per Event: {event.maxTicketsPerEvent}
-              </Typography>
-              <Button variant="contained" color="primary" onClick={() => handleBuyTicket(event.id)}>
-                Buy Ticket
-              </Button>
-              <Snackbar
-      open={errorSnackbar.open}
-      autoHideDuration={6000}
-      onClose={handleCloseSnackbar}
-      anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-    >
-      <Alert onClose={handleCloseSnackbar} severity="error" sx={{ width: '100%' }}>
-        {errorSnackbar.message}
-      </Alert>
-    </Snackbar>
-            </CardContent>
-          </Card>
-        </Grid>
-      ))}
-    </Grid>
-  )}
-</Box>
-</div>
-);
+          </Toolbar>
+        </AppBar>
+        {loading ? (
+          <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+            <CircularProgress />
+          </Box>
+        ) : (
+          <Grid container spacing={2}>
+            {events.map((event) => (
+              <Grid item xs={12} md={6} key={event.id}>
+                <Card>
+                  <StyledCardMedia
+                    component="img"
+                    alt={event.name}
+                    height={400}
+                    image={event.imageUrl}
+                    title={event.name}
+                  />
+                  <CardContent>
+                    <Typography gutterBottom variant="h5" component="h1">
+                      {event.name}
+                    </Typography>
+                    <Typography variant="body2" color="textSecondary" component="p">
+                      Date: {event.date}
+                    </Typography>
+                    <Typography variant="body2" color="textSecondary" component="p">
+                      Time: {event.time}
+                    </Typography>
+                    <Typography variant="body2" color="textSecondary" component="p">
+                      Venue: {event.venue}
+                    </Typography>
+                    <Typography variant="body2" color="textSecondary" component="p">
+                      Description: {event.description}
+                    </Typography>
+                    <Typography variant="body2" color="textSecondary" component="p">
+                      Performers: {event.performers}
+                    </Typography>
+                    <Typography variant="body2" color="textSecondary" component="p">
+                      Organizer: {event.organizer}
+                    </Typography>
+                    <Typography variant="body2" color="textSecondary" component="p">
+                      Ticket Price (ETH): {web3.utils.fromWei(event.ticketPrice, 'ether')}
+                    </Typography>
+                    <Typography variant="body2" color="textSecondary" component="p">
+                      Max Tickets per Event: {event.maxTicketsPerEvent}
+                    </Typography>
+                    <Typography variant="body2" color="textSecondary" component="p">
+                      Remaining Tickets: {event.remainingTickets} {/* Display remaining tickets */}
+                    </Typography>
+                    <Button variant="contained" color="primary" onClick={() => handleBuyTicket(event.id)}>
+                      Buy Ticket
+                    </Button>
+                    <Snackbar
+                      open={errorSnackbar.open}
+                      autoHideDuration={6000}
+                      onClose={handleCloseSnackbar}
+                      anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                    >
+                      <Alert onClose={handleCloseSnackbar} severity="error" sx={{ width: '100%' }}>
+                        {errorSnackbar.message}
+                      </Alert>
+                    </Snackbar>
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+        )}
+      </Box>
+    </div>
+  );
 };
 
 export default EventList;

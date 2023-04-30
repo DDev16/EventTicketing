@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Button, Form, Alert } from 'react-bootstrap';
 import { web3, contract } from '../web3';
-import ResaleTicketsList from '../Ticket/ResaleTicketsList';
 import "./TicketResale.css"
 
 const ResaleForm = () => {
+  const [eventId, setEventId] = useState('');
   const [ticketId, setTicketId] = useState('');
   const [resalePrice, setResalePrice] = useState('');
   const [loading, setLoading] = useState(false);
@@ -13,7 +13,13 @@ const ResaleForm = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    name === 'ticketId' ? setTicketId(value) : setResalePrice(value);
+    if (name === 'ticketId') {
+      setTicketId(value);
+    } else if (name === 'resalePrice') {
+      setResalePrice(value);
+    } else {
+      setEventId(value);
+    }
   };
 
   const handleListTicket = async (e) => {
@@ -25,13 +31,15 @@ const ResaleForm = () => {
     try {
       const accounts = await web3.eth.getAccounts();
 
+      // Pass eventId as an argument
       await contract.methods
-        .listTicketForResale(ticketId, web3.utils.toWei(resalePrice, 'ether'))
+        .listTicketForResale(ticketId, web3.utils.toWei(resalePrice, 'ether'), eventId)
         .send({ from: accounts[0] });
 
       setMessage('Ticket successfully listed for resale.');
       setTicketId('');
       setResalePrice('');
+      setEventId('');
     } catch (err) {
       setError('Error listing ticket for resale: ' + err.message);
     } finally {
@@ -39,24 +47,23 @@ const ResaleForm = () => {
     }
   };
 
-  const handleBuyResaleTicket = async (e) => {
+  const handleDelistTicket = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
     setMessage(null);
 
     try {
-      const ticket = await contract.methods.getTicketDetails(ticketId).call();
       const accounts = await web3.eth.getAccounts();
 
       await contract.methods
-        .buyResaleTicket(ticketId)
-        .send({ from: accounts[0], value: ticket.price });
+        .delistTicketFromResale(ticketId)
+        .send({ from: accounts[0] });
 
-      setMessage('Resale ticket successfully purchased.');
+      setMessage('Ticket successfully delisted from resale.');
       setTicketId('');
     } catch (err) {
-      setError('Error buying resale ticket: ' + err.message);
+      setError('Error delisting ticket from resale: ' + err.message);
     } finally {
       setLoading(false);
     }
@@ -97,8 +104,24 @@ const ResaleForm = () => {
               required
             />
           </Form.Group>
-          <Button className="button" type="submit" disabled={loading}>
+          <Form.Group className="form-group" controlId="formEventId">
+            <Form.Label className="form-label">Event ID</Form.Label>
+            <Form.Control
+              className="form-control"
+              type="number"
+              min="0"
+              name="eventId"
+              value={eventId}
+              onChange={handleChange}
+              placeholder="Enter event ID"
+              required
+            />
+          </Form.Group>
+          <Button className="button" onClick={handleListTicket} disabled={loading}>
             {loading ? 'Listing...' : 'List Ticket for Resale'}
+          </Button>
+          <Button className="button" onClick={handleDelistTicket} disabled={loading}>
+            {loading ? 'Delisting...' : 'De-list Ticket from Resale'}
           </Button>
         </Form>
 
