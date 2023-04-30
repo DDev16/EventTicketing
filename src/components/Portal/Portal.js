@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { web3, contract } from "../Event/web3.js";
-import { AppBar, Toolbar, Typography, IconButton, Box, CircularProgress, Grid, List, ListItem, ListItemText, Card, CardContent, CardActions, Chip, Avatar, Collapse, CardMedia } from "@mui/material";
+import { AppBar,Typography, Box, CircularProgress, Grid, List, ListItem, ListItemText, Card, CardContent, Chip, Avatar, Collapse, CardMedia } from "@mui/material";
 import { styled } from '@mui/system';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import QRCode from 'qrcode.react';
-import EventForm from '../Event/EventForm.js';
-import MenuIcon from '@mui/icons-material/Menu';
 import { useTheme, useMediaQuery } from '@mui/material';
 
 
@@ -197,7 +195,7 @@ return (
             </Grid>
         </Grid>
 
-        <EventForm />
+       
     </Box>
     </div>
 </>
