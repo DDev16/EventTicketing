@@ -10,7 +10,7 @@ import { Container, Typography, Box, Divider } from '@mui/material';
 import Header from './components/Header/Header.js'
 import EventForm from './components/Event/EventForm';
 import Footer from './components/Footer/Footer.js';
-
+import ImageGallery from './components/ImageGallery.js';
 
 
 
@@ -50,12 +50,14 @@ Security, Professionalism, Innovative Features, and Cost-effectiveness. Our plat
 <Typography paragraph sx={{ fontWeight: 'medium', fontSize: '1.2rem', textAlign: 'justify', lineHeight: 1.6, color: 'black' }}>
 Say goodbye to ticket fraud and hello to secure, transparent, and user-friendly event management. Disclaimer: This website does not constitute financial advice or any other kind of advice. Use of the platform is at your own risk, and you should always conduct your own research and due diligence before making any decisions.
 </Typography>
-
+<ImageGallery />
 
 </div>
 
             </>
-          } />
+          }
+           />
+           
           <Route path="/events" element={
             <>
               <Box my={4}><Divider /></Box>
@@ -103,6 +105,7 @@ Say goodbye to ticket fraud and hello to secure, transparent, and user-friendly 
         </Routes>
         
       </Container>
+      
       <Footer/>
     </Router>
     

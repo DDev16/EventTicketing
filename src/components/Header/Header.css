@@ -1,5 +1,125 @@
-
-
 .active {
-    background-color: rgba(0, 0, 0, 0.1) !important;
+background-color: rgba(0, 0, 0, 0.1) !important;
+}
+.logo-img {
+    animation: spin 8s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+/************ Navbar Css ***********/
+/************ Navbar Css ***********/
+/************ Updated Navbar Css ***********/
+nav.navbar {
+    padding: 18px 0;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+    transition: 0.32s ease-in-out;
   }
+  
+  nav.navbar.scrolled {
+    padding: 0px 0;
+    background-color: #121212;
+  }
+  nav.navbar a.navbar-brand {
+    width: auto;
+  }
+  nav.navbar .navbar-nav .nav-link.navbar-link {
+    font-weight: 400;
+    color: #000000 !important;
+    letter-spacing: 0.8px;
+    padding: 0 25px;
+    font-size: 20px;
+    opacity: 0.75;
+  }
+  nav.navbar .navbar-nav a.nav-link.navbar-link:hover {
+    opacity: 1;
+  }
+  nav.navbar .navbar-nav a.nav-link.navbar-link.active {
+    opacity: 1;
+    background-color: #fff;
+    color: #121212;
+    border-radius: 4px;
+    padding: 0 20px;
+  }
+  span.navbar-text {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+  }
+
+  .social-icon a img {
+    width: 25px;
+    height: 25px;
+    transition: 0.3s ease-in-out;
+    object-fit: cover;
+  }
+  
+  .social-icon a:hover img,
+  .social-icon a:focus img,
+  .social-icon a.active img {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+  
+  .social-icon a.active img {
+    color: black;
+  }
+  
+  
+  /* Add this media query to maintain the stretched navbar behavior on mobile devices */
+  @media (max-width: 992px) {
+    nav.navbar .navbar-collapse {
+      width: 100%;
+    }
+  }
+  
+  .social-icon a img {
+    width: 25px;
+    height: 25px;
+    transition: 0.3s ease-in-out;
+    object-fit: cover;
+  }
+  
+  .social-icon a:hover img,
+  .social-icon a:focus img,
+  .social-icon a.active img {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+  
+  .social-icon a.active img {
+    color: black;
+  }
+  
+
+@media (max-width: 991px) {
+nav.navbar .navbar-nav .nav-link.navbar-link {
+font-size: 16px;
+}
+.social-icon a img {
+width: 50%; 
+}
+}
+@media (max-width: 767px) {
+nav.navbar .navbar-nav .nav-link.navbar-link {
+padding: 0 15px;
+}
+.social-icon {
+display: none; 
+color:black;
+}
+
+.logo-img {
+    animation: spin 8s linear infinite;
+}
+
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+}

@@ -1,5 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { AppBar, Toolbar, Typography, Box, CircularProgress, Grid, Card, CardContent, Avatar, CardMedia, Button, Snackbar } from "@mui/material";
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Box,
+  CircularProgress,
+  Grid,
+  Card,
+  CardContent,
+  Avatar,
+  CardMedia,
+  Button,
+  Snackbar
+} from "@mui/material";
 import Alert from '@mui/material/Alert';
 import { styled } from '@mui/system';
 import { web3, contract } from './web3';
@@ -11,6 +24,7 @@ const EventList = () => {
   const [loading, setLoading] = useState(false);
   const [errorSnackbar, setErrorSnackbar] = useState({ open: false, message: '' });
 
+  // Fetch events from the contract
   const fetchEvents = async () => {
     setLoading(true);
     const numberOfEvents = await contract.methods.getNumberOfEvents().call();
@@ -34,10 +48,12 @@ const EventList = () => {
     setLoading(false);
   };
 
+  // Fetch events on component mount
   useEffect(() => {
     fetchEvents();
   }, []);
 
+  // Buy a ticket for an event
   const handleBuyTicket = async (eventId) => {
     try {
       const accounts = await web3.eth.getAccounts();
@@ -52,112 +68,110 @@ const EventList = () => {
     }
   };
 
-
+  // Close the error snackbar
   const handleCloseSnackbar = () => {
     setErrorSnackbar({ ...errorSnackbar, open: false });
   };
 
-
+  // Custom styled CardMedia component
   const StyledCardMedia = styled(CardMedia)`
-width: 70%;
-height: 400px;
-margin: 0 auto;
-display: flex;
-justify-content: center;
-align-items: center;
-border-radius: 10px;
-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.25);
-position: relative;
-transition: all 0.3s ease-in-out;
+    width: 70%;
+    height: 400px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.25);
+    position: relative;
+    transition: all 0.3s ease-in-out;
 
-&:hover {
-  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);
-}
-`;
+    &:hover {
+      box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);
+    }
+  `;
 
   return (
     <div style={{ background: 'rgba(255, 255, 255, 0.7)', padding: '20px', display: 'flex', justifyContent: 'center', width: '100%' }}>
-
       <Box>
         <AppBar position="static">
           <Toolbar>
             <Typography variant="h4">
               Event List
             </Typography>
-
-
-
           </Toolbar>
         </AppBar>
         {loading ? (
-          <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+            <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
             <CircularProgress />
-          </Box>
-        ) : (
-          <Grid container spacing={2}>
-            {events.map((event) => (
-              <Grid item xs={12} md={6} key={event.id}>
-                <Card>
-                  <StyledCardMedia
-                    component="img"
-                    alt={event.name}
-                    height={400}
-                    image={event.imageUrl}
-                    title={event.name}
-                  />
-                  <CardContent>
-                    <Typography gutterBottom variant="h5" component="h1">
-                      {event.name}
-                    </Typography>
-                    <Typography variant="body2" color="textSecondary" component="p">
-                      Date: {event.date}
-                    </Typography>
-                    <Typography variant="body2" color="textSecondary" component="p">
-                      Time: {event.time}
-                    </Typography>
-                    <Typography variant="body2" color="textSecondary" component="p">
-                      Venue: {event.venue}
-                    </Typography>
-                    <Typography variant="body2" color="textSecondary" component="p">
-                      Description: {event.description}
-                    </Typography>
-                    <Typography variant="body2" color="textSecondary" component="p">
-                      Performers: {event.performers}
-                    </Typography>
-                    <Typography variant="body2" color="textSecondary" component="p">
-                      Organizer: {event.organizer}
-                    </Typography>
-                    <Typography variant="body2" color="textSecondary" component="p">
-                      Ticket Price (ETH): {web3.utils.fromWei(event.ticketPrice, 'ether')}
-                    </Typography>
-                    <Typography variant="body2" color="textSecondary" component="p">
-                      Max Tickets per Event: {event.maxTicketsPerEvent}
-                    </Typography>
-                    <Typography variant="body2" color="textSecondary" component="p">
-                      Remaining Tickets: {event.remainingTickets} {/* Display remaining tickets */}
-                    </Typography>
-                    <Button variant="contained" color="primary" onClick={() => handleBuyTicket(event.id)}>
-                      Buy Ticket
-                    </Button>
-                    <Snackbar
-                      open={errorSnackbar.open}
-                      autoHideDuration={6000}
-                      onClose={handleCloseSnackbar}
-                      anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-                    >
-                      <Alert onClose={handleCloseSnackbar} severity="error" sx={{ width: '100%' }}>
-                        {errorSnackbar.message}
-                      </Alert>
-                    </Snackbar>
-                  </CardContent>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
-        )}
       </Box>
-    </div>
-  );
+    ) : (
+      <Grid container spacing={2}>
+        {events.map((event) => (
+          <Grid item xs={12} md={6} key={event.id}>
+            <Card>
+              <StyledCardMedia
+                component="img"
+                alt={event.name}
+                height={400}
+                image={event.imageUrl}
+                title={event.name}
+              />
+              <CardContent>
+                <Typography gutterBottom variant="h5" component="h1">
+                  {event.name}
+                </Typography>
+                <Typography variant="body2" color="textSecondary" component="p">
+                  Date: {event.date}
+                </Typography>
+                <Typography variant="body2" color="textSecondary" component="p">
+                  Time: {event.time}
+                </Typography>
+                <Typography variant="body2" color="textSecondary" component="p">
+                  Venue: {event.venue}
+                </Typography>
+                <Typography variant="body2" color="textSecondary" component="p">
+                  Description: {event.description}
+                </Typography>
+                <Typography variant="body2" color="textSecondary" component="p">
+                  Performers: {event.performers}
+                </Typography>
+                <Typography variant="body2" color="textSecondary" component="p">
+                  Organizer: {event.organizer}
+                </Typography>
+                <Typography variant="body2" color="textSecondary" component="p">
+  Ticket Price (ETH): {parseFloat(web3.utils.fromWei(event.ticketPrice, 'ether')).toFixed(0)}
+</Typography>
+
+
+                <Typography variant="body2" color="textSecondary" component="p">
+                  Max Tickets per Event: {event.maxTicketsPerEvent}
+                </Typography>
+                <Typography variant="body2" color="textSecondary" component="p">
+                  Remaining Tickets: {event.remainingTickets} {/* Display remaining tickets */}
+                </Typography>
+                <Button variant="contained" color="primary" onClick={() => handleBuyTicket(event.id)}>
+                  Buy Ticket
+                </Button>
+                <Snackbar
+                  open={errorSnackbar.open}
+                  autoHideDuration={6000}
+                  onClose={handleCloseSnackbar}
+                  anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+                >
+                  <Alert onClose={handleCloseSnackbar} severity="error" sx={{ width: '100%' }}>
+                    {errorSnackbar.message}
+                  </Alert>
+                </Snackbar>
+              </CardContent>
+            </Card>
+          </Grid>
+        ))}
+      </Grid>
+    )}
+  </Box>
+</div>
+);
 };
 
 export default EventList;

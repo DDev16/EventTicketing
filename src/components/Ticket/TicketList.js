@@ -114,7 +114,9 @@ import {
                 <CardContent>
                   <Typography variant="h6">Ticket ID: {ticket.ticketId}</Typography>
                   <Typography variant="body1">Event ID: {ticket.eventId}</Typography>
-                  <Typography variant="body1">Price: ${ticket.price}</Typography>
+                  <Typography variant="body1">
+  Price: {parseFloat(web3.utils.fromWei(ticket.price, 'ether')).toFixed(0)} ETH
+</Typography>
                   <Typography variant="body1">Owner: {ticket.owner}</Typography>
                 </CardContent>
                 <CardActions>

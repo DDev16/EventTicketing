@@ -1,0 +1,13 @@
+.masonry-item {
+    transform-origin: center bottom;
+    transition: transform 0.3s ease;
+  }
+  
+  .masonry-item:nth-child(odd) {
+    transform: translateY(40px);
+  }
+  
+  .masonry-item:hover {
+    transform: translateY(-4px);
+  }
+  

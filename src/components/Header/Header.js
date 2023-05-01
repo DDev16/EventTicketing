@@ -1,86 +1,66 @@
-import React, { useState } from 'react';
-import { AppBar, Toolbar, Typography, IconButton, Button, useMediaQuery, useTheme, Drawer, List, ListItem, ListItemText, Box } from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
-import { NavLink } from 'react-router-dom';
-import logo from './logo.png';
-import './Header.css';
+import { useState, useEffect } from "react";
+import { Navbar, Nav, Container } from "react-bootstrap";
+import { Link } from "react-router-dom";
+import logo from '../Header/logo.png';
+import navIcon1 from '../Header/nav-icon1.svg';
+import navIcon2 from '../Header/nav-icon2.svg';
+import navIcon3 from '../Header/nav-icon3.svg';
+import { HashLink } from 'react-router-hash-link';
+import '../Header/Header.css'
 
+export const Header = () => {
 
-const Header = () => {
-  const [drawerOpen, setDrawerOpen] = useState(false);
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const [activeLink, setActiveLink] = useState('home');
+  const [scrolled, setScrolled] = useState(false);
 
-  const handleDrawerToggle = () => {
-    setDrawerOpen(!drawerOpen);
-  };
+  useEffect(() => {
+    const onScroll = () => {
+      if (window.scrollY > 50) {
+        setScrolled(true);
+      } else {
+        setScrolled(false);
+      }
+    }
 
-  const closeDrawer = () => {
-    setDrawerOpen(false);
-  };
+    window.addEventListener("scroll", onScroll);
 
-  const menuItems = [
-    { title: 'Home', link: '/' },
-    { title: 'Events', link: '/events' },
-    { title: 'Tickets', link: '/tickets' },
-    { title: 'Resale', link: '/resale' },
-    { title: 'Portal', link: '/portal' },
-    { title: 'Event Form', link: '/Form' },
-  ];
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [])
 
-  const LinkComponent = React.forwardRef((props, ref) => (
-    <NavLink ref={ref} {...props} />
-  ));
-  
+  const onUpdateActiveLink = (value) => {
+    setActiveLink(value);
+  }
 
   return (
-    <>
-      <Box display="flex" justifyContent="center" mt={4} mb={4}>
-        <img src={logo} className="App-logo" alt="logo" style={{ objectFit: 'contain' }} />
-      </Box>
-      <AppBar position="static">
-        <Toolbar>
-          {isMobile ? (
-            <IconButton edge="start" color="inherit" aria-label="menu" onClick={handleDrawerToggle}>
-              <MenuIcon />
-            </IconButton>
-          ) : null}
-          <Typography variant="h6">Event Ticketing System</Typography>
-          {!isMobile ? (
-            <>
-              {menuItems.map((item) => (
-                <Button
-                  color="inherit"
-                  key={item.title}
-                  component={LinkComponent}
-                  to={item.link}
-                >
-                  {item.title}
-                </Button>
-              ))}
-            </>
-          ) : null}
-        </Toolbar>
-      </AppBar>
-      {isMobile ? (
-        <Drawer open={drawerOpen} onClose={closeDrawer}>
-          <List>
-            {menuItems.map((item) => (
-              <ListItem
-                button
-                key={item.title}
-                onClick={closeDrawer}
-                component={LinkComponent}
-                to={item.link}
-              >
-                <ListItemText primary={item.title} />
-              </ListItem>
-            ))}
-          </List>
-        </Drawer>
-      ) : null}
-    </>
-  );
-};
+    <Navbar expand="md" className={scrolled ? "scrolled" : ""}>
+      <Container>
+        <Navbar.Brand as={Link} to="/">
+        <img src={logo} alt="Logo" className="logo-img" />        </Navbar.Brand>
+        <Navbar.Toggle aria-controls="basic-navbar-nav">
+          <span className="navbar-toggler-icon"></span>
+        </Navbar.Toggle>
+        <Navbar.Collapse id="basic-navbar-nav">
+          <Nav className="ms-auto">
+            <Nav.Link as={Link} to="/" className={activeLink === 'home' ? 'active navbar-link' : 'navbar-link'} onClick={() => onUpdateActiveLink('home')}>Home</Nav.Link>
+            <Nav.Link as={Link} to="/events" className={activeLink === 'events' ? 'active navbar-link' : 'navbar-link'} onClick={() => onUpdateActiveLink('events')}>Events</Nav.Link>
+            <Nav.Link as={Link} to="/tickets" className={activeLink === 'tickets' ? 'active navbar-link' : 'navbar-link'} onClick={() => onUpdateActiveLink('tickets')}>Tickets</Nav.Link>
+            <Nav.Link as={Link} to="/portal" className={activeLink === 'portal' ? 'active navbar-link' : 'navbar-link'} onClick={() => onUpdateActiveLink('portal')}>Portal</Nav.Link>
+            <Nav.Link as={Link} to="/form" className={activeLink === 'form' ? 'active navbar-link' : 'navbar-link'} onClick={() => onUpdateActiveLink('form')}>Event Form</Nav.Link>
+          </Nav>
+          <span className="navbar-text">
+            <div className="social-icon">
+              <a href="#"><img src={navIcon1} alt="" /></a>
+              <a href="#"><img src={navIcon2} alt="" /></a>
+              <a href="#"><img src={navIcon3} alt="" /></a>
+            </div>
+            <HashLink to='#connect'>
+              <button className="vvd"><span>Let’s Connect</span></button>
+</HashLink>
+</span>
+</Navbar.Collapse>
+</Container>
+</Navbar>
+)
+}
 
 export default Header;
