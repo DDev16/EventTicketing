@@ -11,7 +11,7 @@ import EventTicketingABI from '../EventTicketingABI.json';
 import "../Ticket/TicketPurchase.css";
 import QRCode from 'qrcode.react';
 
-const contractAddress = '0x71a9d115E322467147391c4a71D85F8e1cA623EF';
+const contractAddress = '0x1613beB3B2C4f22Ee086B2b38C1476A3cE7f78E8';
 const contract = new web3.eth.Contract(EventTicketingABI, contractAddress);
 
 const TicketPurchase = () => {

@@ -2,7 +2,7 @@ import Web3 from 'web3';
 import EventTicketingABI from './EventTicketingABI.json'; // Adjust the path accordingly
  // Import ABI or define it as a constant
 
-const contractAddress = '0x71a9d115E322467147391c4a71D85F8e1cA623EF';
+const contractAddress = '0x1613beB3B2C4f22Ee086B2b38C1476A3cE7f78E8';
 
 let web3;
 let contract;
